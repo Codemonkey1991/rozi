@@ -3,6 +3,11 @@ Gem::Specification.new { |s|
   s.version = "0.0.1"
   s.date = "2014-05-06"
   s.summary = "A gem for working with several Ozi Explorer file formats"
+  s.description = <<-TEXT
+    Contains classes for creating Waypoint files and Track files for Ozi
+    Explorer.
+  TEXT
+  s.homepage = "https://github.com/Codemonkey1991/rozi"
   s.authors = ["Tomas Sandven"]
   s.email = "tomas191191@gmail.com"
   s.files = Dir["lib/**/*.rb"]
