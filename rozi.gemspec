@@ -1,6 +1,6 @@
 Gem::Specification.new { |s|
   s.name = "rozi"
-  s.version = "0.0.2"
+  s.version = "0.0.3"
   s.date = "2014-05-06"
   s.summary = "A gem for working with several Ozi Explorer file formats"
   s.description = <<-TEXT

@@ -1,0 +1,53 @@
+{<img src="https://badge.fury.io/rb/rozi.svg" alt="Gem Version" />}[http://badge.fury.io/rb/rozi]
+
+= Rozi
+
+Rozi is a toolkit for working with all Ozi Explorer file formats. Currently the
+implemented functionality is:
+
+- Creating Waypoint files.
+- Creating Track files.
+
+== Creating Waypoint files.
+
+Waypoint files are created in Rozi by creating an array of {Rozi::Waypoint}
+instances and writing them to disk using a {Rozi::WaypointWriter}:
+
+Example:
+
+  waypoints = [
+    Rozi::Waypoint.new(latitude: -12.7, longitude: -58.0, name: "South America"),
+    Rozi::Waypoint.new(latitude: 43.7, longitude: -103.7, name: "North America"),
+    Rozi::Waypoint.new(latitude: 49.6, longitude: 20.9, name: "Europe")
+  ]
+
+  writer = Rozi::WaypointWriter.new()
+
+  writer.write(waypoints, "file_path.wpt")
+
+Waypoint symbols can be set directly using an integer, or using a symbol
+representation:
+
+  # Identical:
+  wpt.symbol = 10
+  wpt.symbol = :house
+
+See {Rozi::Waypoint} for a list of attributes.
+
+== Creating Track files.
+
+Track files are created in Rozi by creating a {Rozi::Track} instance with two or
+more {Rozi::TrackPoint} instances, then writing them to disk using a
+{Rozi::TrackWriter}:
+
+  track = Rozi::Track.new()
+
+  track << Rozi::TrackPoint.new(latitude: 39.8, longitude: -3.4)
+  track << Rozi::TrackPoint.new(latitude: 46.6, longitude: 3.1)
+  track << Rozi::TrackPoint.new(latitude: 50.79, longitude: 10.3)
+  track << Rozi::TrackPoint.new(latitude: 49.04, longitude: 31.5)
+
+  writer = Rozi::TrackWriter.new()
+
+  writer.write(track, "file_path.plt")
+

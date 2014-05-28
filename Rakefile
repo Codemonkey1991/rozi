@@ -30,3 +30,8 @@ task("build") { |t|
   system("gem build rozi.gemspec")
   system("mv rozi-*.gem pkg")
 }
+
+desc("Hosts an auto-reloading doc server")
+task("doc-server") { |t|
+  system("yard server -r README")
+}
