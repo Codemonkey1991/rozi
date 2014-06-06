@@ -1,5 +1,7 @@
 
 *.swp
+.ruby-version
 
 /pkg/
 /.yardoc/
+/doc/
