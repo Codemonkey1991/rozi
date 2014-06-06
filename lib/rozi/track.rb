@@ -30,7 +30,7 @@ module Rozi
     end
 
     ##
-    # @returns [Array] the attributes of the track as an Array
+    # @return [Array] the attributes of the track as an Array
     #
     def attributes
       [@line_width, @color, @description, @skip_value,

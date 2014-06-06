@@ -14,7 +14,7 @@ module Rozi
   #
   # @overload open_file_for_writing(path)
   #
-  #   Can be called with a block, just file {File.open File.open}.
+  #   Can be called with a block, just file +File.open+.
   #
   #   @yieldparam [File] file
   #   @return [void]

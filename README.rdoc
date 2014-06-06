@@ -8,10 +8,40 @@ implemented functionality is:
 - Creating Waypoint files.
 - Creating Track files.
 
+== Files.
+
+Text based file formats read by Ozi Explorer should be encoded as ISO-8859-1
+and use CR LF line endings (\\r\\n). If you pass file paths to Rozi's write
+functions, Rozi will handle this for you. If that isn't an alternative you
+either have to handle this yourself, or you can use
+{Rozi.open_file_for_writing}.
+
+  file = Rozi.open_file_for_writing("file_path.wpt")
+  file.write("Østre aker\n")   # Writes "Østre aker\r\n" in ISO-8859-1.
+
+  # Does the same thing, but closes the file for you when you're done.
+  Rozi.open_file_for_writing("file_path.wpt") { |file|
+    file.write("Østre aker\n")
+  }
+
+== Colors.
+
+Any time you set colors in Rozi, you can either use the three-byte integer
+representation that Ozi Explorer expects, or you can use a hex string like
+"RRGGBB" and Rozi will convert it for you. Example:
+
+  # Identical.
+  Rozi::Waypoint.new(bg_color: "ABCDEF")
+  Rozi::Waypoint.new(bg_color: 15715755)
+
+  # Identical.
+  Rozi::Waypoint.new(bg_color: "FF0000")
+  Rozi::Waypoint.new(bg_color: 255)
+
 == Creating Waypoint files.
 
 Waypoint files are created in Rozi by creating an array of {Rozi::Waypoint}
-instances and writing them to disk using a {Rozi::WaypointWriter}:
+instances and writing them to a file using {Rozi.write_waypoints}:
 
 Example:
 
@@ -21,24 +51,15 @@ Example:
     Rozi::Waypoint.new(latitude: 49.6, longitude: 20.9, name: "Europe")
   ]
 
-  writer = Rozi::WaypointWriter.new()
-
-  writer.write(waypoints, "file_path.wpt")
-
-Waypoint symbols can be set directly using an integer, or using a symbol
-representation:
-
-  # Identical:
-  wpt.symbol = 10
-  wpt.symbol = :house
+  Rozi.write_waypoints(waypoints, "file_path.wpt")
 
 See {Rozi::Waypoint} for a list of attributes.
 
 == Creating Track files.
 
 Track files are created in Rozi by creating a {Rozi::Track} instance with two or
-more {Rozi::TrackPoint} instances, then writing them to disk using a
-{Rozi::TrackWriter}:
+more {Rozi::TrackPoint} instances, then writing them to a file using
+{Rozi.write_track}:
 
   track = Rozi::Track.new()
 
@@ -47,7 +68,5 @@ more {Rozi::TrackPoint} instances, then writing them to disk using a
   track << Rozi::TrackPoint.new(latitude: 50.79, longitude: 10.3)
   track << Rozi::TrackPoint.new(latitude: 49.04, longitude: 31.5)
 
-  writer = Rozi::TrackWriter.new()
-
-  writer.write(track, "file_path.plt")
+  Rozi.write_track(track, "file_path.plt")
 
