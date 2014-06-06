@@ -37,21 +37,21 @@ Reserved 2
       wpt = Waypoint.new(name: "test")
 
       assert_equal(
-        "-1,test,0.000000,0.000000,,3,1,4,0,65535,,0,,,-777,6,0,17",
+        "-1,test,0.000000,0.000000,,0,1,3,0,65535,,0,,,-777,6,0,17",
         @subject.waypoint_to_text(wpt)
       )
 
-      wpt = Waypoint.new(name: "test", symbol: :house)
+      wpt = Waypoint.new(name: "test", symbol: 4)
 
       assert_equal(
-        "-1,test,0.000000,0.000000,,10,1,4,0,65535,,0,,,-777,6,0,17",
+        "-1,test,0.000000,0.000000,,4,1,3,0,65535,,0,,,-777,6,0,17",
         @subject.waypoint_to_text(wpt)
       )
 
       wpt = Waypoint.new(name: "test", description: "æøå, ÆØÅ")
 
       assert_equal(
-        "-1,test,0.000000,0.000000,,3,1,4,0,65535,æøåÑ ÆØÅ,0,,,-777,6,0,17",
+        "-1,test,0.000000,0.000000,,0,1,3,0,65535,æøåÑ ÆØÅ,0,,,-777,6,0,17",
         @subject.waypoint_to_text(wpt)
       )
     end

@@ -14,14 +14,6 @@ module Rozi
       }
     end
 
-    def test_symbol
-      wp = Waypoint.new()
-      wp.symbol = :house
-
-      assert_equal :house, wp.symbol
-      assert_equal 10, wp.symbol(:number)
-    end
-
     def test_colors
       wp = Waypoint.new()
 
