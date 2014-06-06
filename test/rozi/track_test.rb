@@ -1,6 +1,4 @@
 
-require "rozi/track"
-
 module Rozi
 
   class TrackTest < Minitest::Test

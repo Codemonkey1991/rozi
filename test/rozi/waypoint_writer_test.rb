@@ -1,7 +1,4 @@
 
-require "rozi/waypoint_writer"
-require "rozi/waypoint"
-
 module Rozi
 
   class WaypointWriterTest < Minitest::Test

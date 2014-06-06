@@ -12,27 +12,17 @@ module Rozi
     include OziFunctions
 
     def write(waypoints, file)
-      write_inner = Proc.new { |waypoints, file|
-        file.write <<-TEXT
-OziExplorer Waypoint File Version 1.1
-WGS 84
-Reserved 2
+      file.write <<-TEXT.gsub(/^[ ]{8}/, "")
+        OziExplorer Waypoint File Version 1.1
+        WGS 84
+        Reserved 2
 
-        TEXT
+      TEXT
 
-        waypoints.each { |wpt|
-          file.write(waypoint_to_text(wpt))
-          file.write("\n")
-        }
+      waypoints.each { |wpt|
+        file.write(waypoint_to_text(wpt))
+        file.write("\n")
       }
-
-      if file.is_a? String
-        file = open_file_for_writing(file) { |f|
-          write_inner.call(waypoints, f)
-        }
-      else
-        write_inner.call(waypoints, file)
-      end
     end
 
     def waypoint_to_text(waypoint)

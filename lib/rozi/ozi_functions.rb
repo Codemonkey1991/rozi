@@ -34,29 +34,6 @@ module Rozi
 
       color
     end
-
-    ##
-    # Opens a file handle with the correct settings for writing an Ozi
-    # Explorer file format.
-    #
-    # @param [String] path
-    # @return [File]
-    #
-    def open_file_for_writing(path)
-      if block_given?
-        file = File.open(path, "w") { |f|
-          f.set_encoding("ISO-8859-1", "UTF-8", crlf_newline: true)
-          yield f
-        }
-
-        return nil
-      else
-        file = File.open(path, "w")
-        file.set_encoding("ISO-8859-1", "UTF-8", crlf_newline: true)
-
-        return file
-      end
-    end
   end
 
 end

@@ -1,6 +1,4 @@
 
-require "rozi/waypoint"
-
 module Rozi
 
   class WaypointTest < Minitest::Test

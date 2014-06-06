@@ -8,38 +8,29 @@ module Rozi
     include OziFunctions
 
     ##
-    # Writes the track to +file+ as an Ozi Explorer .plt file.
+    # Writes the track to +file+ as an Ozi Explorer track file. The file
+    # extension should be ".plt".
     #
     # @param [AddressKit::Ozi::Track] track
-    # @param [File, #write] file
+    # @param [File, String, #write] file
     #
     def write(track, file)
-      write_inner = Proc.new { |track, file|
-        file.write(<<-TEXT)
-OziExplorer Track Point File Version 2.1
-WGS 84
-Altitude is in Feet
-Reserved 3
-        TEXT
+      file.write <<-TEXT.gsub(/^[ ]{8}/, "")
+        OziExplorer Track Point File Version 2.1
+        WGS 84
+        Altitude is in Feet
+        Reserved 3
+      TEXT
 
-        file.write(track_attributes_to_text(track))
+      file.write(track_attributes_to_text(track))
+      file.write("\n")
+
+      file.write(track.points.count.to_s() + "\n")
+
+      track.points.each { |point|
+        file.write(track_point_to_text(point))
         file.write("\n")
-
-        file.write(track.points.count.to_s() + "\n")
-
-        track.points.each { |point|
-          file.write(track_point_to_text(point))
-          file.write("\n")
-        }
       }
-
-      if file.is_a? String
-        open_file_for_writing(file) { |f|
-          write_inner.call(track, f)
-        }
-      else
-        write_inner.call(track, file)
-      end
     end
 
     def track_attributes_to_text(track)

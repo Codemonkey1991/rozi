@@ -1,5 +1,8 @@
 
 module Rozi
+
+  PROJECT_DIR = File.expand_path("../", File.dirname(__FILE__))
+
   ##
   # Loads all ruby files under lib/rozi. Called automatically when requiring
   # "rozi.rb".

@@ -1,7 +1,7 @@
 
 desc("Runs the test suite")
 task("test") { |t|
-  system('ruby -I lib -r minitest/autorun -r mocha/setup -e "ARGV.each { |file| load(file) }" test/**/*_test.rb')
+  system('ruby -I lib -r rozi -r minitest/autorun -r mocha/setup -e "ARGV.each { |file| load(file) }" test/**/*_test.rb')
 }
 
 desc("Sets the version of the project")

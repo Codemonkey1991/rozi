@@ -1,8 +1,6 @@
 
 require "stringio"
 
-require "rozi/track_writer"
-
 module Rozi
 
   class TrackWriterTest < Minitest::Test

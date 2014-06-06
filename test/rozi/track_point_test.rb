@@ -1,7 +1,4 @@
 
-require "rozi/track_point"
-require "minitest/autorun"
-
 module Rozi
 
   class TrackPointTest < Minitest::Test
