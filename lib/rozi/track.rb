@@ -8,7 +8,8 @@ module Rozi
   class Track
     attr_accessor :points
 
-    attr_accessor :line_width, :color, :description, :skip_value, :type,
+    attr_reader :color
+    attr_accessor :line_width, :description, :skip_value, :type,
       :fill_type, :fill_color
 
     DEFAULTS = {
@@ -21,12 +22,18 @@ module Rozi
       fill_color: 0
     }
 
+    include OziFunctions
+
     def initialize(args={})
       @points = args[:points] || []
 
       DEFAULTS.each_pair { |key, value| set(key, value) }
 
       args.each_pair { |key, value| set(key, value) }
+    end
+
+    def color=(color)
+      @color = interpret_color(color)
     end
 
     ##
