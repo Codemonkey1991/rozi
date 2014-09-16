@@ -7,11 +7,13 @@ task("test") { |t|
     test_files = Dir["test/rozi/**/*.rb"]
   end
 
-  # Quotes are added around the paths in case of spaces.
-  test_files.map { |path| %("#{path}") }
-  test_files = test_files.join(" ")
+  puts "Running #{test_files.count} test case(s)"
+  puts
 
-  system("ruby -I lib test/run_tests.rb #{test_files}")
+  # Quotes are added around the paths in case of spaces.
+  test_files = test_files.map { |path| %("#{path}") }.join(" ")
+
+  exec("ruby -I lib test/run_tests.rb #{test_files}")
 }
 
 desc("Sets the version of the project")
