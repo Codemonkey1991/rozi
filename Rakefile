@@ -1,7 +1,17 @@
 
 desc("Runs the test suite")
 task("test") { |t|
-  system('ruby -I lib -r rozi -r minitest/autorun -r mocha/setup -e "ARGV.each { |file| load(file) }" test/**/*_test.rb')
+  test_files = ARGV[1..ARGV.count]
+
+  if test_files.empty?
+    test_files = Dir["test/rozi/**/*.rb"]
+  end
+
+  # Quotes are added around the paths in case of spaces.
+  test_files.map { |path| %("#{path}") }
+  test_files = test_files.join(" ")
+
+  system("ruby -I lib test/run_tests.rb #{test_files}")
 }
 
 desc("Sets the version of the project")
