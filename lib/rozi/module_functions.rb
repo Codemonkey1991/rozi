@@ -70,4 +70,23 @@ module Rozi
 
     return nil
   end
+
+  ##
+  # Writes a {Rozi::NameSearchText} object to a file.
+  #
+  # @see Rozi::NameSearchTextWriter#write
+  #
+  def write_nst(nst, file)
+    @@nst_writer ||= NameSearchTextWriter.new
+
+    if file.is_a? String
+      open_file_for_writing(file) { |f|
+        @@nst_writer.write(nst, f)
+      }
+    else
+      @@nst_writer.write(nst, file)
+    end
+
+    return nil
+  end
 end
