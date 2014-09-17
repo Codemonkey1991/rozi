@@ -22,8 +22,8 @@ module Rozi
     # @return [Integer]
     #
     # @example
-    #   interpret_color(255)      # 255
-    #   interpret_color("ABCDEF") # 15715755
+    #   interpret_color(255)      # => 255
+    #   interpret_color("ABCDEF") # => 15715755
     #
     def interpret_color(color)
       if color.is_a? String
@@ -33,6 +33,15 @@ module Rozi
       end
 
       color
+    end
+
+    ##
+    # Checks if +datum+ is a valid datum according to Ozi Explorer.
+    #
+    # @return [Boolean] true if +datum+ is valid
+    #
+    def datum_valid?(datum)
+      Rozi::DATUMS.include? datum
     end
   end
 

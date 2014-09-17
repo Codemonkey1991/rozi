@@ -19,6 +19,15 @@ module Rozi
     def test_interpret_color_hash
       assert_equal 15715755, @subject.interpret_color("ABCDEF")
     end
+
+    def test_datum_valid?
+      assert @subject.datum_valid?("WGS 84")
+      assert @subject.datum_valid?("Norsk")
+      assert @subject.datum_valid?("Egypt")
+
+      refute @subject.datum_valid?("Coolywobbles")
+      refute @subject.datum_valid?("Rambunctious")
+    end
   end
 
 end
