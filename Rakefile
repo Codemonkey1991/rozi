@@ -7,7 +7,9 @@ task("test") { |t|
     test_files = Dir["test/rozi/**/*.rb"]
   end
 
-  puts "Running #{test_files.count} test case(s)"
+  puts "Running #{test_files.count} test case(s):"
+  puts
+  test_files.each { |path| puts path }
   puts
 
   # Quotes are added around the paths in case of spaces.
