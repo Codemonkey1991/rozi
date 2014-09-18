@@ -27,15 +27,21 @@ task("set-version", :new_version) { |t, args|
     exit(1)
   end
 
+  new_date = Time.now.to_s[0..9]
+
   ["lib/rozi/version.rb", "rozi.gemspec"].each { |file|
-    new = `sed "s/#{Rozi::VERSION}/#{args[:new_version]}/" #{file}`
+    text = File.read file
+
+    text.gsub! Rozi::VERSION, args[:new_version]
+    text.gsub! /^  s\.date = .*$/, %(  s.date = "#{new_date}")
 
     File.open(file, "w") { |file|
-      file.write(new)
+      file.write text
     }
   }
 
   puts "Version set to #{args[:new_version]}"
+  puts "Date updated to #{new_date}"
 }
 
 desc("Builds the gem into pkg/")
