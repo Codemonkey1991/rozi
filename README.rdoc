@@ -2,18 +2,19 @@
 
 = Rozi
 
-Rozi is a toolkit for working with all Ozi Explorer file formats. Currently the
-implemented functionality is:
+Rozi is a Ruby gem for working with all Ozi Explorer file formats. Currently
+the implemented functionality is:
 
 - Creating Waypoint files.
 - Creating Track files.
+- Creating Name Search Text (.nst) files.
 
 == Files.
 
 Text based file formats read by Ozi Explorer should be encoded as ISO-8859-1
 and use CR LF line endings (\\r\\n). If you pass file paths to Rozi's write
-functions, Rozi will handle this for you. If that isn't an alternative you
-either have to handle this yourself, or you can use
+functions (rather than file objects) Rozi will handle this for you. If that
+isn't an alternative you either have to handle this yourself, or you can use
 {Rozi.open_file_for_writing}.
 
   file = Rozi.open_file_for_writing("file_path.wpt")
@@ -59,7 +60,9 @@ See {Rozi::Waypoint} for a list of attributes.
 
 Track files are created in Rozi by creating a {Rozi::Track} instance with two or
 more {Rozi::TrackPoint} instances, then writing them to a file using
-{Rozi.write_track}:
+{Rozi.write_track}.
+
+Example:
 
   track = Rozi::Track.new()
 
@@ -69,4 +72,48 @@ more {Rozi::TrackPoint} instances, then writing them to a file using
   track << Rozi::TrackPoint.new(latitude: 49.04, longitude: 31.5)
 
   Rozi.write_track(track, "file_path.plt")
+
+== Creating NST files.
+
+See {Ozi Explorer: Name
+Search}[http://www.oziexplorer3.com/namesearch/wnamesrch.html] for information
+about Name Search. An NST file has to be converted into a Name Database using
+the {"Name Search
+Creator"}[http://www.oziexplorer3.com/namesearch/namesearch_setup.exe] tool
+before they can be used by Ozi Explorer.
+
+In Rozi, an NST file is represented by a {Rozi::NameSearchText} object. This
+object lets you control the coordinate system (lat/lng or UTM) of the name
+database, as well as the datum, UTM Zone and Hemisphere (if applicable). You can
+also add a comment to the top of the exported file using
+{Rozi::NameSearchText#comment}. By default, decimal lat/lng coordinates are used
+with the WGS 84 datum.
+
+{Rozi::Name} objects are added to the {Rozi::NameSearchText} instance, which is
+then written to a file using {Rozi.write_nst}.
+
+Example:
+
+  nst = Rozi::NameSearchText.new
+  nst.comment = "Generated #{Time.now}"
+
+  nst << Rozi::Name.new("Place name", "Feature code", nil, 12.3456, 23.4567)
+
+  Rozi.write_nst(nst, "file_path.nst")
+
+Example using UTM with the "Norsk" datum:
+
+  nst = Rozi::NameSearchText.new
+  nst.comment = "Generated #{Time.now}"
+  nst.utm = true
+  nst.utm_zone = "33"
+  nst.datum = "Norsk"
+  nst.hemisphere = "N"
+
+  nst << Rozi::Name.new("Place name", "Feature code", nil, 67890.12, 56789.01)
+
+  # UTM Zone overridden.
+  nst << Rozi::Name.new("Place name", "Feature code", "32", 67890.12, 56789.01)
+
+  Rozi.write_nst(nst, "file_path.nst")
 
