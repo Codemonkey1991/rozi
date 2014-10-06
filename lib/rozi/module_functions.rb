@@ -21,7 +21,10 @@ module Rozi
   #
   def open_file_for_writing(path)
     file = File.open(path, "w")
-    file.set_encoding("ISO-8859-1", "UTF-8", crlf_newline: true)
+    file.set_encoding(
+      "ISO-8859-1", "UTF-8",
+      crlf_newline: true, undef: :replace, replace: "?"
+    )
 
     if block_given?
       yield file
