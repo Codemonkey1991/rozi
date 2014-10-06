@@ -1,4 +1,6 @@
 
+require "rozi/ozi_functions"
+
 module Rozi
 
   ##
