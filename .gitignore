@@ -1,7 +1,9 @@
 
 *.swp
-.ruby-version
 
+/rozi.sublime-project
+/rozi.sublime-workspace
+/.ruby-version
 /pkg/
 /.yardoc/
 /doc/
