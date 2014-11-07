@@ -4,7 +4,7 @@ require_relative "lib/rozi/version"
 Gem::Specification.new { |s|
   s.name = "rozi"
   s.version = Rozi::VERSION
-  s.date = "2014-09-18"
+  s.date = "2014-11-07"
   s.summary = "A gem for working with several Ozi Explorer file formats"
   s.description = "A gem for working with several Ozi Explorer file formats"
   s.homepage = "https://github.com/Codemonkey1991/rozi"
