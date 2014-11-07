@@ -54,7 +54,9 @@ Example:
 
   Rozi.write_waypoints(waypoints, "file_path.wpt")
 
-See {Rozi::Waypoint} for a list of attributes.
+Every aspect of the waypoint can be customized on the {Rozi::Waypoint} instance
+(display format, symbol, background- and foreground colors, description, font
+size etc.)
 
 == Creating Track files.
 
@@ -72,6 +74,9 @@ Example:
   track << Rozi::TrackPoint.new(latitude: 49.04, longitude: 31.5)
 
   Rozi.write_track(track, "file_path.plt")
+
+Both {Rozi::Track} and {Rozi::TrackPoint} has lots of customizable attributes to
+change the appearance of the track.
 
 == Creating NST files.
 
@@ -117,3 +122,6 @@ Example using UTM with the "Norsk" datum:
 
   Rozi.write_nst(nst, "file_path.nst")
 
+Note, text in name search files (names and feature codes) cannot contain
+commas. There is no mechanism for escaping commas or substituting them with
+different symbols like in waypoint files.
