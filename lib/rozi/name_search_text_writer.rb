@@ -4,6 +4,10 @@ module Rozi
   ##
   # A class for writing {Rozi::NameSearchText} objects to files.
   #
+  # @note Text in name search files (names and feature codes) cannot contain
+  #   commas. There is no mechanism for escaping commas or substituting them
+  #   with different symbols like in waypoint files.
+  #
   class NameSearchTextWriter
 
     ##
@@ -53,7 +57,11 @@ module Rozi
 
     def name_to_line(name)
       if not name.name or not name.lat or not name.lng
-        raise "name, lat and lng must be set!"
+        fail "name, lat and lng must be set!"
+      end
+
+      if name.name.include?(",") or name.feature_code.include?(",")
+        fail ArgumentError, "Text cannot contain commas"
       end
 
       "#{name.name},#{name.feature_code},#{name.zone},#{name.lat},#{name.lng}"
