@@ -72,7 +72,7 @@ module Rozi
     private
 
     def read_test_file(name)
-      path = File.join(Rozi::PROJECT_DIR, "test_data", name)
+      path = File.join(Rozi::ROOT, "test/test_data", name)
 
       File.read(path, mode: "rb")
     end

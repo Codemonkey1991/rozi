@@ -12,7 +12,7 @@ module Rozi
     # extension should be ".plt".
     #
     # @param [AddressKit::Ozi::Track] track
-    # @param [File, String, #write] file
+    # @param [File, #write] file
     #
     def write(track, file)
       file.write <<-TEXT.gsub(/^[ ]{8}/, "")
