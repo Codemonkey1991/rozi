@@ -68,15 +68,6 @@ module Rozi
       end
     end
 
-    def to_s
-      array = self.to_a
-      array.map! { |item| item.is_a?(String) ? escape_text(item) : item }
-      array.map! { |item| item.nil? ? "" : item }
-      array.map! { |item| item.is_a?(Float) ? item.round(6) : item }
-
-      "%d,%s,%f,%f,%s,%d,1,%d,%d,%d,%s,%d,,,%d,%d,%d,%d" % array
-    end
-
     ##
     # Sets the foreground color. Accepts a hex string or a decimal value.
     #
@@ -117,12 +108,6 @@ module Rozi
       @version = version
     end
 
-    def to_s
-      <<-TEXT.gsub(/^[ ]{8}/, "")
-        OziExplorer Waypoint File Version #{@version}
-        #{@datum}
-        Reserved 2
-      TEXT
     end
   end
 
@@ -131,6 +116,8 @@ module Rozi
   # files
   #
   class WaypointFile
+    include OziFunctions
+
     ##
     # Behaves like {File#open}, but returns/yields a {WaypointFile} object
     #
@@ -199,7 +186,7 @@ module Rozi
         raise "Can't write metadata, file is not empty"
       end
 
-      @file.write metadata.to_s
+      @file.write serialize_metadata(metadata)
       @file.write "\n"
 
       nil
@@ -212,13 +199,30 @@ module Rozi
     # @return [nil]
     #
     def write_waypoint(waypoint)
-      @file.write waypoint.to_s
+      @file.write serialize_waypoint(waypoint)
       @file.write "\n"
 
       nil
     end
 
     private
+
+    def serialize_metadata(metadata)
+      <<-TEXT.gsub(/^[ ]{8}/, "")
+        OziExplorer Waypoint File Version #{metadata.version}
+        #{metadata.datum}
+        Reserved 2
+      TEXT
+    end
+
+    def serialize_waypoint(waypoint)
+      array = waypoint.to_a
+      array.map! { |item| item.is_a?(String) ? escape_text(item) : item }
+      array.map! { |item| item.nil? ? "" : item }
+      array.map! { |item| item.is_a?(Float) ? item.round(6) : item }
+
+      "%d,%s,%f,%f,%s,%d,1,%d,%d,%d,%s,%d,,,%d,%d,%d,%d" % array
+    end
 
     ##
     # Ensures that waypoint metadata has been written to the file

@@ -23,29 +23,6 @@ module Rozi
       wp.bg_color = :foo
       assert_equal :bar, wp.bg_color
     end
-
-    def test_to_s
-      wpt = Waypoint.new(name: "test")
-
-      assert_equal(
-        "-1,test,0.000000,0.000000,,0,1,3,0,65535,,0,,,-777,6,0,17",
-        wpt.to_s
-      )
-
-      wpt = Waypoint.new(name: "test", symbol: 4)
-
-      assert_equal(
-        "-1,test,0.000000,0.000000,,4,1,3,0,65535,,0,,,-777,6,0,17",
-        wpt.to_s
-      )
-
-      wpt = Waypoint.new(name: "test", description: "æøå, ÆØÅ")
-
-      assert_equal(
-        "-1,test,0.000000,0.000000,,0,1,3,0,65535,æøåÑ ÆØÅ,0,,,-777,6,0,17",
-        wpt.to_s
-      )
-    end
   end
 
   class WaypointFileTest < Minitest::Test
@@ -81,6 +58,49 @@ module Rozi
           File.read(file_path, mode: "rb")
         )
       end
+    end
+
+    def test_serialize_metadata
+      m = WaypointMetadata.new
+
+      assert_equal(
+        "OziExplorer Waypoint File Version 1.1\n" +
+        "WGS 84\n" +
+        "Reserved 2\n",
+        @subject.send(:serialize_metadata, m)
+      )
+
+      m = WaypointMetadata.new("Norge", "1.2")
+
+      assert_equal(
+        "OziExplorer Waypoint File Version 1.2\n" +
+        "Norge\n" +
+        "Reserved 2\n",
+        @subject.send(:serialize_metadata, m)
+      )
+    end
+
+    def test_serialize_waypoint
+      wpt = Waypoint.new(name: "test")
+
+      assert_equal(
+        "-1,test,0.000000,0.000000,,0,1,3,0,65535,,0,,,-777,6,0,17",
+        @subject.send(:serialize_waypoint, wpt)
+      )
+
+      wpt = Waypoint.new(name: "test", symbol: 4)
+
+      assert_equal(
+        "-1,test,0.000000,0.000000,,4,1,3,0,65535,,0,,,-777,6,0,17",
+        @subject.send(:serialize_waypoint, wpt)
+      )
+
+      wpt = Waypoint.new(name: "test", description: "æøå, ÆØÅ")
+
+      assert_equal(
+        "-1,test,0.000000,0.000000,,0,1,3,0,65535,æøåÑ ÆØÅ,0,,,-777,6,0,17",
+        @subject.send(:serialize_waypoint, wpt)
+      )
     end
   end
 end
