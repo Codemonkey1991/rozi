@@ -53,5 +53,5 @@ def run_tests(files)
   opts.insert(0, "--verbose") if ENV["VERBOSE"]
   opts.insert(0, "--name", ENV["TESTNAME"]) if ENV["TESTNAME"]
 
-  exec "ruby", "test/run_tests.rb", *opts, "--", *files
+  exec "ruby", "-I", "lib", "test/run_tests.rb", *opts, "--", *files
 end
