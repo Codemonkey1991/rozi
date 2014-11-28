@@ -1,18 +1,41 @@
+GIT
+  remote: git://github.com/Hubro/Datastruct.git
+  revision: 91939738cf12db760106251cbf31b8d6bb978482
+  branch: master
+  specs:
+    datastruct (0.0.1)
+
+PATH
+  remote: .
+  specs:
+    rozi (0.1.0)
+      datastruct (~> 0)
+
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (3.5.1)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
+      slop (~> 3.6)
+    columnize (0.8.9)
+    debugger-linecache (1.2.0)
     metaclass (0.0.4)
     minitest (5.4.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     rake (10.4.0)
+    slop (3.6.0)
     yard (0.8.7.6)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
+  datastruct!
   minitest
   mocha
   rake
+  rozi!
   yard

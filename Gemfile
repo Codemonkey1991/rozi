@@ -3,7 +3,6 @@
 
 source "https://rubygems.org"
 
-gem "rake"
-gem "minitest"
-gem "mocha"
-gem "yard"
+gem "datastruct", github: "Hubro/Datastruct", branch: "master"
+
+gemspec
