@@ -4,9 +4,9 @@ require "tempfile"
 module Rozi
   class ModuleFunctionsTest < Minitest::Test
 
-    def test_open_file_for_writing
+    def test_open_file
       temp_file_path { |file_path|
-        file = Rozi.open_file_for_writing file_path
+        file = Rozi.open_file(file_path, "w")
         file.write("foo\nbar\næøå")
         file.close
 
@@ -16,40 +16,17 @@ module Rozi
       }
     end
 
-    def test_open_file_for_writing_with_block
+    def test_open_file_with_block
       temp_file_path { |file_path|
         f = nil
 
-        Rozi.open_file_for_writing(file_path) { |file|
+        Rozi.open_file(file_path, "w") { |file|
           assert_instance_of File, file
 
           f = file
         }
 
         assert f.closed?
-      }
-    end
-
-    def test_write_waypoints
-      waypoints = [
-        Rozi::Waypoint.new(
-          latitude: 59.91273, longitude: 10.74609, name: "OSLO"
-        ),
-        Rozi::Waypoint.new(
-          latitude: 60.39358, longitude: 5.32476, name: "BERGEN"
-        ),
-        Rozi::Waypoint.new(
-          latitude: 62.56749, longitude: 7.68709, name: "ÅNDALSNES"
-        )
-      ]
-
-      temp_file_path { |file_path|
-        Rozi.write_waypoints(waypoints, file_path)
-
-        text = File.read(file_path, mode: "rb")
-        expected_output = read_test_file("expected_output_1.wpt")
-
-        assert_equal expected_output, text
       }
     end
 

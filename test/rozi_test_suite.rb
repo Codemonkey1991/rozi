@@ -13,6 +13,26 @@ module RoziTestSuite
     include Assertions
   end
 
+  def self.read_test_data(file_name)
+    File.read(File.join(Rozi::ROOT, "test/test_data/", file_name), mode: "rb")
+  end
+
+  def self.temp_file_path(name="temp", suffix="")
+    path = Dir::Tmpname.make_tmpname(
+      "#{Dir::Tmpname.tmpdir}/rozi", "#{name}#{suffix}"
+    )
+
+    if block_given?
+      begin
+        yield path
+      ensure
+        File.unlink path if File.exist? path
+      end
+    else
+      return path
+    end
+  end
+
   ##
   # Requires all Ruby files matching one of +patterns+.
   #
