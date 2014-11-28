@@ -39,7 +39,7 @@ module Rozi
     end
 
     def initialize(*args, **kwargs)
-      defaults = {
+      update(
         number: -1,
         name: "",
         latitude: 0.0,
@@ -55,9 +55,9 @@ module Rozi
         font_size: 6,
         font_style: 0,
         symbol_size: 17
-      }
+      )
 
-      super(*args, defaults.merge(kwargs))
+      super
     end
 
     def display_format=(display_format)
