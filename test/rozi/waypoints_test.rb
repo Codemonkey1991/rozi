@@ -15,15 +15,13 @@ module Rozi
 
     def test_colors
       wp = Waypoint.new()
+      wp.expects(:interpret_color).twice.with(:foo).returns(:bar)
 
-      wp.fg_color = "000000"
-      assert_equal 0, wp.fg_color
+      wp.fg_color = :foo
+      assert_equal :bar, wp.fg_color
 
-      wp.fg_color = "ABCDEF"
-      assert_equal 15715755, wp.fg_color
-
-      wp.fg_color = 128
-      assert_equal 128, wp.fg_color
+      wp.bg_color = :foo
+      assert_equal :bar, wp.bg_color
     end
 
     def test_to_s
