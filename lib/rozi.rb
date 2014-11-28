@@ -1,4 +1,6 @@
 
+require "datastruct"
+
 module Rozi
   extend self
 

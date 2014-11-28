@@ -15,8 +15,11 @@ module Rozi
   ##
   # Represents a waypoint in Ozi Explorer.
   #
-  class Waypoint
+  Waypoint = DataStruct(:number, :name, :latitude, :longitude, :date, :symbol,
+      :display_format, :fg_color, :bg_color, :description, :pointer_direction,
+      :altitude, :font_size, :font_style, :symbol_size)
 
+  class Waypoint
     include OziFunctions
 
     DISPLAY_FORMATS = {
@@ -31,62 +34,42 @@ module Rozi
       :marker => 8
     }
 
-    attr_accessor :number, :name, :latitude, :longitude, :date, :symbol,
-      :display_format, :description, :pointer_direction, :altitude,
-      :font_size, :font_style, :symbol_size
-
-    attr_reader :fg_color, :bg_color
-
     def self.from_text(text)
       fail "Not implemented"
     end
 
-    def initialize(args={})
-      @number = -1
-      @name = ""
-      @latitude = 0.0
-      @longitude = 0.0
-      @date = nil
-      @symbol = 0
-      @display_format = :name_with_dot
-      @fg_color = 0
-      @bg_color = 65535
-      @description = ""
-      @pointer_direction = 0
-      @altitude = -777
-      @font_size = 6
-      @font_style = 0
-      @symbol_size = 17
-
-      args.each_pair { |key, value|
-        begin
-          self.send(key.to_s() + "=", value)
-        rescue NoMethodError
-          fail ArgumentError, "Not a valid attribute: #{key}"
-        end
+    def initialize(*args, **kwargs)
+      defaults = {
+        number: -1,
+        name: "",
+        latitude: 0.0,
+        longitude: 0.0,
+        date: nil,
+        symbol: 0,
+        display_format: :name_with_dot,
+        fg_color: 0,
+        bg_color: 65535,
+        description: "",
+        pointer_direction: 0,
+        altitude: -777,
+        font_size: 6,
+        font_style: 0,
+        symbol_size: 17
       }
+
+      super(*args, defaults.merge(kwargs))
     end
 
-    def to_a
-      [@number,
-       @name,
-       @latitude,
-       @longitude,
-       @date,
-       @symbol,
-       DISPLAY_FORMATS[@display_format],
-       @fg_color,
-       @bg_color,
-       @description,
-       @pointer_direction,
-       @altitude,
-       @font_size,
-       @font_style,
-       @symbol_size]
+    def display_format=(display_format)
+      if display_format.is_a? Symbol
+        @data[:display_format] = DISPLAY_FORMATS[display_format]
+      else
+        @data[:display_format] = display_format
+      end
     end
 
     def to_s
-      array = self.to_a()
+      array = self.to_a
       array.map! { |item| item.is_a?(String) ? escape_text(item) : item }
       array.map! { |item| item.nil? ? "" : item }
       array.map! { |item| item.is_a?(Float) ? item.round(6) : item }
@@ -98,14 +81,14 @@ module Rozi
     # Sets the foreground color. Accepts a hex string or a decimal value.
     #
     def fg_color=(color)
-      @fg_color = interpret_color(color)
+      @data[:fg_color] = interpret_color(color)
     end
 
     ##
     # Sets the background color. Accepts a hex string or a decimal value.
     #
     def bg_color=(color)
-      @bg_color = interpret_color(color)
+      @data[:bg_color] = interpret_color(color)
     end
   end
 
