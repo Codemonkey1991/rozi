@@ -87,27 +87,14 @@ module Rozi
   # This class represents the meta data contained in the top 4 lines of a
   # waypoint file
   #
-  class WaypointMetadata
-    ##
-    # @return [String]
-    # @see Rozi::DATUMS
-    #
-    attr_accessor :datum
+  WaypointMetadata = DataStruct(:datum, :version) do
+    def initialize(*args, **kwargs)
+      update(
+        datum: "WGS 84",
+        version: "1.1"
+      )
 
-    ##
-    # @return [String]
-    #
-    attr_accessor :version
-
-    def self.from_text(text)
-      fail "Not implemented"
-    end
-
-    def initialize(datum: "WGS 84", version: "1.1")
-      @datum = datum
-      @version = version
-    end
-
+      super
     end
   end
 
