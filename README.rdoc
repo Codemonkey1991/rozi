@@ -15,13 +15,13 @@ Text based file formats read by Ozi Explorer should be encoded as ISO-8859-1
 and use CR LF line endings (\\r\\n). If you pass file paths to Rozi's write
 functions (rather than file objects) Rozi will handle this for you. If that
 isn't an alternative you either have to handle this yourself, or you can use
-{Rozi.open_file_for_writing}.
+{Rozi.open_file}.
 
-  file = Rozi.open_file_for_writing("file_path.wpt")
+  file = Rozi.open_file("file_path.wpt", "w")
   file.write("Østre aker\n")   # Writes "Østre aker\r\n" in ISO-8859-1.
 
   # Does the same thing, but closes the file for you when you're done.
-  Rozi.open_file_for_writing("file_path.wpt") { |file|
+  Rozi.open_file("file_path.wpt", "w") { |file|
     file.write("Østre aker\n")
   }
 
@@ -31,20 +31,20 @@ Any time you set colors in Rozi, you can either use the three-byte integer
 representation that Ozi Explorer expects, or you can use a hex string like
 "RRGGBB" and Rozi will convert it for you. Example:
 
-  # Identical.
+  # Identical
   Rozi::Waypoint.new(bg_color: "ABCDEF")
   Rozi::Waypoint.new(bg_color: 15715755)
 
-  # Identical.
-  Rozi::Waypoint.new(bg_color: "FF0000")
-  Rozi::Waypoint.new(bg_color: 255)
+  # Identical
+  Rozi::Track.new(color: "FF0000")
+  Rozi::Track.new(color: 255)
 
 == Creating Waypoint files.
 
 Waypoint files are created in Rozi by creating an array of {Rozi::Waypoint}
 instances and writing them to a file using {Rozi.write_waypoints}:
 
-Example:
+Example - Basic usage:
 
   waypoints = [
     Rozi::Waypoint.new(latitude: -12.7, longitude: -58.0, name: "South America"),
@@ -53,6 +53,28 @@ Example:
   ]
 
   Rozi.write_waypoints(waypoints, "file_path.wpt")
+
+Example - More verbose usage:
+
+  file = WaypointFile.open("file_path.wpt", "w")
+  metadata = WaypointMetadata.new(datum: "WGS 84")
+
+  file.write_metadata(metadata)
+  file.write(waypoints)
+  file.close
+
+Example - Even more verbose usage:
+
+  file = WaypointFile.open("file_path.wpt", "w")
+  metadata = WaypointMetadata.new(datum: "WGS 84")
+
+  file.write_metadata(metadata)
+
+  waypoints.each { |wpt|
+    file.write_waypoint(wpt)
+  }
+
+  file.close
 
 Every aspect of the waypoint can be customized on the {Rozi::Waypoint} instance
 (display format, symbol, background- and foreground colors, description, font
