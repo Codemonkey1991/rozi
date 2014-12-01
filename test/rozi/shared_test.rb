@@ -1,10 +1,10 @@
 
 module Rozi
 
-  class OziFunctionsTest < Minitest::Test
+  class SharedTest < Minitest::Test
     def setup
       @subject = Class.new {
-        include OziFunctions
+        include Shared
       }.new
     end
 

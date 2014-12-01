@@ -1,5 +1,5 @@
 
-require "rozi/ozi_functions"
+require "rozi/shared"
 
 module Rozi
   ##
@@ -43,7 +43,7 @@ module Rozi
       :marker => 8
     }
 
-    include OziFunctions
+    include Shared
 
     def initialize(*args, **kwargs)
       update(
@@ -112,7 +112,7 @@ module Rozi
   # files
   #
   class WaypointFile
-    include OziFunctions
+    include Shared
 
     ##
     # Behaves like {File#open}, but returns/yields a {WaypointFile} object

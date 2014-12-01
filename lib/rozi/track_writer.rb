@@ -1,11 +1,11 @@
 
-require "rozi/ozi_functions"
+require "rozi/shared"
 
 module Rozi
 
   class TrackWriter
 
-    include OziFunctions
+    include Shared
 
     ##
     # Writes the track to +file+ as an Ozi Explorer track file. The file

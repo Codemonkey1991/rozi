@@ -2,11 +2,11 @@
 module Rozi
 
   ##
-  # Contains general functions for working with Ozi Explorer file formats.
+  # Contains general functions for working with Ozi Explorer file formats
   #
-  module OziFunctions
+  module Shared
     ##
-    # Escapes commas so the text can be used in Ozi file formats.
+    # Escapes commas so the text can be used in Ozi file formats
     #
     # @param [String] text
     # @return [String]
@@ -16,9 +16,9 @@ module Rozi
     end
 
     ##
-    # Converts the input to an RGB color represented by an integer.
+    # Converts the input to an RGB color represented by an integer
     #
-    # @param [String, Integer] color Can be a RRGGBB hex string or an integer.
+    # @param [String, Integer] color Can be a RRGGBB hex string or an integer
     # @return [Integer]
     #
     # @example
@@ -36,7 +36,7 @@ module Rozi
     end
 
     ##
-    # Checks if +datum+ is a valid datum according to Ozi Explorer.
+    # Checks if +datum+ is a valid datum according to Ozi Explorer
     #
     # @return [Boolean] true if +datum+ is valid
     #

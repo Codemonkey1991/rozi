@@ -1,5 +1,5 @@
 
-require "rozi/ozi_functions"
+require "rozi/shared"
 
 module Rozi
 
@@ -14,7 +14,7 @@ module Rozi
     attr_accessor :comment, :datum, :names, :latlng,
       :utm, :utm_zone, :hemisphere
 
-    include OziFunctions
+    include Shared
 
     def initialize
       @comment = ""

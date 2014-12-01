@@ -1,5 +1,5 @@
 
-require "rozi/ozi_functions"
+require "rozi/shared"
 
 module Rozi
 
@@ -24,7 +24,7 @@ module Rozi
       fill_color: 0
     }
 
-    include OziFunctions
+    include Shared
 
     def initialize(args={})
       @points = args[:points] || []
