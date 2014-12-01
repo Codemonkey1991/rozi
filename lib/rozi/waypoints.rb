@@ -2,25 +2,34 @@
 require "rozi/ozi_functions"
 
 module Rozi
+  ##
+  # Writes an enumerable of waypoints to a file
+  #
+  # @param [Enumerable] waypoints
+  # @param [String] file_path
+  # @param [Hash] meta Any extra keyword arguments are processed as waypoint
+  #   metadata
+  #
+  def self.write_waypoints(waypoints, file_path, **meta)
+    wpt_file = WaypointFile.open(file_path, "w")
 
-  def write_waypoints(waypoints, file, **meta)
-    file.write WaypointMetadata.new(**meta)
+    wpt_file.write_metadata(WaypointMetadata.new(**meta))
+    wpt_file.write waypoints
 
-    waypoints.each { |wpt|
-      file.write wpt
-      file.write "\n"
-    }
+    wpt_file.close
+
+    nil
   end
 
   ##
   # Represents a waypoint in Ozi Explorer.
   #
-  Waypoint = DataStruct(:number, :name, :latitude, :longitude, :date, :symbol,
-      :display_format, :fg_color, :bg_color, :description, :pointer_direction,
-      :altitude, :font_size, :font_style, :symbol_size)
-
-  class Waypoint
-    include OziFunctions
+  class Waypoint < DataStruct
+    PROPERTIES = [
+      :number, :name, :latitude, :longitude, :date, :symbol, :display_format,
+      :fg_color, :bg_color, :description, :pointer_direction, :altitude,
+      :font_size, :font_style, :symbol_size
+    ]
 
     DISPLAY_FORMATS = {
       :number_only => 0,
@@ -34,9 +43,7 @@ module Rozi
       :marker => 8
     }
 
-    def self.from_text(text)
-      fail "Not implemented"
-    end
+    include OziFunctions
 
     def initialize(*args, **kwargs)
       update(
@@ -69,14 +76,14 @@ module Rozi
     end
 
     ##
-    # Sets the foreground color. Accepts a hex string or a decimal value.
+    # Sets the foreground color
     #
     def fg_color=(color)
       @data[:fg_color] = interpret_color(color)
     end
 
     ##
-    # Sets the background color. Accepts a hex string or a decimal value.
+    # Sets the background color
     #
     def bg_color=(color)
       @data[:bg_color] = interpret_color(color)
@@ -87,7 +94,9 @@ module Rozi
   # This class represents the meta data contained in the top 4 lines of a
   # waypoint file
   #
-  WaypointMetadata = DataStruct(:datum, :version) do
+  class WaypointMetadata < DataStruct
+    PROPERTIES = [:datum, :version]
+
     def initialize(*args, **kwargs)
       update(
         datum: "WGS 84",
