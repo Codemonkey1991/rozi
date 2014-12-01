@@ -60,23 +60,23 @@ module RoziTestSuite
       @subject = Rozi::WaypointFile.new(@sio)
     end
 
-    def test_serialize_metadata
-      m = Rozi::WaypointMetadata.new
+    def test_serialize_waypoint_file_properties
+      m = Rozi::WaypointFileProperties.new
 
       assert_equal(
         "OziExplorer Waypoint File Version 1.1\n" +
         "WGS 84\n" +
         "Reserved 2\n",
-        @subject.send(:serialize_metadata, m)
+        @subject.send(:serialize_waypoint_file_properties, m)
       )
 
-      m = Rozi::WaypointMetadata.new("Norge", "1.2")
+      m = Rozi::WaypointFileProperties.new("Norge", "1.2")
 
       assert_equal(
         "OziExplorer Waypoint File Version 1.2\n" +
         "Norge\n" +
         "Reserved 2\n",
-        @subject.send(:serialize_metadata, m)
+        @subject.send(:serialize_waypoint_file_properties, m)
       )
     end
 

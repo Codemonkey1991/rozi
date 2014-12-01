@@ -1,6 +1,5 @@
 
 module Rozi
-
   class TrackTest < Minitest::Test
     def test_initialize_defaults
       t = Track.new()
@@ -21,5 +20,4 @@ module Rozi
       }
     end
   end
-
 end

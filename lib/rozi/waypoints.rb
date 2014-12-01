@@ -13,7 +13,7 @@ module Rozi
   def self.write_waypoints(waypoints, file_path, **meta)
     wpt_file = WaypointFile.open(file_path, "w")
 
-    wpt_file.write_metadata(WaypointMetadata.new(**meta))
+    wpt_file.write_properties(WaypointFileProperties.new(**meta))
     wpt_file.write waypoints
 
     wpt_file.close
@@ -22,7 +22,7 @@ module Rozi
   end
 
   ##
-  # Represents a waypoint in Ozi Explorer.
+  # Represents a waypoint in Ozi Explorer
   #
   class Waypoint < DataStruct
     PROPERTIES = [
@@ -91,10 +91,10 @@ module Rozi
   end
 
   ##
-  # This class represents the meta data contained in the top 4 lines of a
-  # waypoint file
+  # This class represents the waypoint file properties contained in the top 4
+  # lines of a waypoint file
   #
-  class WaypointMetadata < DataStruct
+  class WaypointFileProperties < DataStruct
     PROPERTIES = [:datum, :version]
 
     def initialize(*args, **kwargs)
@@ -169,20 +169,20 @@ module Rozi
     # Writes metadata to the file
     #
     # This function can only be used on an *empty* file. If any waypoints are
-    # written to the file before metadata is written, a {WaypointMetadata}
+    # written to the file before metadata is written, a {WaypointFileProperties}
     # object will be created with default values and written to the file first.
     # Executing this function on a non-empty file will result in a runtime
     # error.
     #
-    # @param [WaypointMetadata] metadata
+    # @param [WaypointFileProperties] metadata
     # @return [nil]
     #
-    def write_metadata(metadata)
+    def write_properties(metadata)
       if @file.size > 0
         raise "Can't write metadata, file is not empty"
       end
 
-      @file.write serialize_metadata(metadata)
+      @file.write serialize_waypoint_file_properties(metadata)
       @file.write "\n"
 
       nil
@@ -203,7 +203,7 @@ module Rozi
 
     private
 
-    def serialize_metadata(metadata)
+    def serialize_waypoint_file_properties(metadata)
       <<-TEXT.gsub(/^[ ]{8}/, "")
         OziExplorer Waypoint File Version #{metadata.version}
         #{metadata.datum}
@@ -229,7 +229,7 @@ module Rozi
       @metadata_written = true
 
       if @file.size == 0
-        write_metadata WaypointMetadata.new
+        write_properties WaypointFileProperties.new
       end
     end
   end

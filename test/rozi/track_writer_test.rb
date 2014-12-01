@@ -2,7 +2,6 @@
 require "stringio"
 
 module Rozi
-
   class TrackWriterTest < Minitest::Test
     def test_write
       point1 = mock()
@@ -58,5 +57,4 @@ Reserved 3
       )
     end
   end
-
 end
