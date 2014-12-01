@@ -111,45 +111,8 @@ module Rozi
   # A thin layer above {File} that handles reading and writing of waypoints to
   # files
   #
-  class WaypointFile
+  class WaypointFile < FileWrapperBase
     include Shared
-
-    ##
-    # Behaves like {File#open}, but returns/yields a {WaypointFile} object
-    #
-    def self.open(file_path, mode="r")
-      file = Rozi.open_file(file_path, mode)
-      wptfile = WaypointFile.new(file)
-
-      if block_given?
-        begin
-          return yield wptfile
-        ensure
-          wptfile.close unless wptfile.closed?
-        end
-      else
-        return wptfile
-      end
-    end
-
-    def initialize(file)
-      @file = file
-      @metadata_written = false
-    end
-
-    ##
-    # @return [nil]
-    #
-    def close
-      @file.close
-    end
-
-    ##
-    # @return [Boolean]
-    #
-    def closed?
-      @file.closed?
-    end
 
     ##
     # Writes waypoints to the file
