@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Hubro/Datastruct.git
-  revision: 91939738cf12db760106251cbf31b8d6bb978482
+  revision: 477cf6d4a120b57d1b76b72896b1d3ba913327df
   branch: master
   specs:
     datastruct (0.0.1)
