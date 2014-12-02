@@ -1,6 +1,6 @@
 
-require "rozi/shared"
 require "rozi/file_wrapper_base"
+require "rozi/shared"
 
 module Rozi
   ##

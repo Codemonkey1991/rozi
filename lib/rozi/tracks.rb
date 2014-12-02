@@ -1,6 +1,4 @@
 
-require "datastruct"
-
 require "rozi/file_wrapper_base"
 require "rozi/shared"
 
