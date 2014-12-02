@@ -7,13 +7,13 @@ module Rozi
   #
   # @param [Enumerable] waypoints
   # @param [String] file_path
-  # @param [Hash] meta Any extra keyword arguments are processed as waypoint
-  #   metadata
+  # @param [Hash] properties Any extra keyword arguments are processed as
+  #   waypoint file properties
   #
-  def self.write_waypoints(waypoints, file_path, **meta)
+  def self.write_waypoints(waypoints, file_path, **properties)
     wpt_file = WaypointFile.open(file_path, "w")
 
-    wpt_file.write_properties(WaypointFileProperties.new(**meta))
+    wpt_file.write_properties(WaypointFileProperties.new(**properties))
     wpt_file.write waypoints
 
     wpt_file.close
@@ -129,23 +129,23 @@ module Rozi
     end
 
     ##
-    # Writes metadata to the file
+    # Writes waypoint file properties to the file
     #
     # This function can only be used on an *empty* file. If any waypoints are
-    # written to the file before metadata is written, a {WaypointFileProperties}
-    # object will be created with default values and written to the file first.
-    # Executing this function on a non-empty file will result in a runtime
-    # error.
+    # written to the file before file properties is written, a
+    # {WaypointFileProperties} object will be created with default values and
+    # written to the file first. Executing this function on a non-empty file
+    # will result in a runtime error.
     #
-    # @param [WaypointFileProperties] metadata
+    # @param [WaypointFileProperties] file properties
     # @return [nil]
     #
-    def write_properties(metadata)
+    def write_properties(props)
       if @file.size > 0
-        raise "Can't write metadata, file is not empty"
+        raise "Can't write file properties, file is not empty"
       end
 
-      @file.write serialize_waypoint_file_properties(metadata)
+      @file.write serialize_waypoint_file_properties(props)
       @file.write "\n"
 
       nil
@@ -166,10 +166,10 @@ module Rozi
 
     private
 
-    def serialize_waypoint_file_properties(metadata)
+    def serialize_waypoint_file_properties(properties)
       <<-TEXT.gsub(/^[ ]{8}/, "")
-        OziExplorer Waypoint File Version #{metadata.version}
-        #{metadata.datum}
+        OziExplorer Waypoint File Version #{properties.version}
+        #{properties.datum}
         Reserved 2
       TEXT
     end
@@ -184,12 +184,12 @@ module Rozi
     end
 
     ##
-    # Ensures that waypoint metadata has been written to the file
+    # Ensures that waypoint file properties has been written to the file
     #
-    def ensure_metadata
-      return if @metadata_written
+    def ensure_file_properties
+      return if @properties_written
 
-      @metadata_written = true
+      @properties_written = true
 
       if @file.size == 0
         write_properties WaypointFileProperties.new
