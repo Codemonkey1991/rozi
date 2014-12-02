@@ -1,4 +1,6 @@
 
+require "stringio"
+
 module RoziTestSuite
   class WriteWaypointsTest < TestCase
     def setup
@@ -6,26 +8,27 @@ module RoziTestSuite
     end
 
     def test_basic_usage
-      RoziTestSuite.temp_file_path do |file_path|
-        waypoints = [
-          Rozi::Waypoint.new(
-            latitude: 59.91273, longitude: 10.74609, name: "OSLO"
-          ),
-          Rozi::Waypoint.new(
-            latitude: 60.39358, longitude: 5.32476, name: "BERGEN"
-          ),
-          Rozi::Waypoint.new(
-            latitude: 62.56749, longitude: 7.68709, name: "ÅNDALSNES"
-          )
-        ]
-
-        @subject.call(waypoints, file_path, datum: "WGS 84", version: "1.1")
-
-        assert_equal(
-          RoziTestSuite.read_test_data("expected_output_1.wpt"),
-          File.read(file_path, mode: "rb")
+      waypoints = [
+        Rozi::Waypoint.new(
+          latitude: 59.91273, longitude: 10.74609, name: "OSLO"
+        ),
+        Rozi::Waypoint.new(
+          latitude: 60.39358, longitude: 5.32476, name: "BERGEN"
+        ),
+        Rozi::Waypoint.new(
+          latitude: 62.56749, longitude: 7.68709, name: "ÅNDALSNES"
         )
-      end
+      ]
+
+      file = StringIO.new
+      Rozi.expects(:open_file).returns(file)
+
+      @subject.call(waypoints, "/x/y.wpt", datum: "WGS 84", version: "1.1")
+
+      assert_equal(
+        RoziTestSuite.read_test_data("expected_output_1.wpt"),
+        file.string
+      )
     end
   end
 

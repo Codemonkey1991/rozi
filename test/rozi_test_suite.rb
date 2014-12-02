@@ -14,7 +14,9 @@ module RoziTestSuite
   end
 
   def self.read_test_data(file_name)
-    File.read(File.join(Rozi::ROOT, "test/test_data/", file_name), mode: "rb")
+    File.read(
+      File.join(Rozi::ROOT, "test/test_data/", file_name), mode: "r:UTF-8"
+    )
   end
 
   def self.temp_file_path(name="temp", suffix="")
