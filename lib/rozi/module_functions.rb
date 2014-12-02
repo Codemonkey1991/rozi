@@ -35,44 +35,6 @@ module Rozi
     end
   end
 
-  # ##
-  # # Writes an array of waypoints to a file.
-  # #
-  # # @see Rozi::WaypointWriter#write
-  # #
-  # def write_waypoints(waypoints, file)
-  #   @@wpt_writer ||= WaypointWriter.new
-
-  #   if file.is_a? String
-  #     open_file(file, "w") { |f|
-  #       @@wpt_writer.write(waypoints, f)
-  #     }
-  #   else
-  #     @@wpt_writer.write(waypoints, file)
-  #   end
-
-  #   return nil
-  # end
-
-  ##
-  # Writes a track to a file.
-  #
-  # @see Rozi::TrackWriter#write
-  #
-  def write_track(track, file)
-    @@track_writer ||= TrackWriter.new
-
-    if file.is_a? String
-      open_file(file, "w") { |f|
-        @@track_writer.write(track, f)
-      }
-    else
-      @@track_writer.write(track, file)
-    end
-
-    return nil
-  end
-
   ##
   # Writes a {Rozi::NameSearchText} object to a file.
   #

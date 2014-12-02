@@ -30,21 +30,21 @@ module Rozi
       }
     end
 
-    def test_write_track
-      track = Rozi::Track.new()
-      track << Rozi::TrackPoint.new(latitude: 59.91273, longitude: 10.74609)
-      track << Rozi::TrackPoint.new(latitude: 60.39358, longitude: 5.32476)
-      track << Rozi::TrackPoint.new(latitude: 62.56749, longitude: 7.68709)
+    # def test_write_track
+    #   track = Rozi::Track.new()
+    #   track << Rozi::TrackPoint.new(latitude: 59.91273, longitude: 10.74609)
+    #   track << Rozi::TrackPoint.new(latitude: 60.39358, longitude: 5.32476)
+    #   track << Rozi::TrackPoint.new(latitude: 62.56749, longitude: 7.68709)
 
-      temp_file_path { |file_path|
-        Rozi.write_track(track, file_path)
+    #   temp_file_path { |file_path|
+    #     Rozi.write_track(track, file_path)
 
-        text = File.read(file_path, mode: "rb")
-        expected_output = read_test_file("expected_output_1.plt")
+    #     text = File.read(file_path, mode: "rb")
+    #     expected_output = read_test_file("expected_output_1.plt")
 
-        assert_equal expected_output, text
-      }
-    end
+    #     assert_equal expected_output, text
+    #   }
+    # end
 
     private
 
