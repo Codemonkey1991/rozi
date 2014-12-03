@@ -25,20 +25,11 @@ module Rozi
   ##
   # This class represents a name in an Ozi Explorer name database.
   #
-  # @note The +name+, +lat+ and +lng+ fields must be set, or runtime errors will
+  # @note The +name+, +latitude+ and +longitude+ fields must be set, or runtime errors will
   #   be raised when attempting to write to file.
   #
-  class Name
-
-    attr_accessor :name, :feature_code, :zone, :lat, :lng
-
-    def initialize(name=nil, feature_code=nil, zone=nil, lat=nil, lng=nil)
-      @name = name
-      @feature_code = feature_code
-      @zone = zone
-      @lat = lat
-      @lng = lng
-    end
+  class Name < DataStruct
+    PROPERTIES = [:name, :feature_code, :zone, :latitude, :longitude]
   end
 
   ##
@@ -133,15 +124,17 @@ module Rozi
     end
 
     def name_to_line(name)
-      if not name.name or not name.lat or not name.lng
-        fail "name, lat and lng must be set!"
+      if not name.name or not name.latitude or not name.longitude
+        fail "name, latitude and longitude must be set!"
       end
 
       if name.name.include?(",") or name.feature_code.include?(",")
         fail ArgumentError, "Text cannot contain commas"
       end
 
-      "#{name.name},#{name.feature_code},#{name.zone},#{name.lat},#{name.lng}"
+      "%s,%s,%s,%.6f,%.6f" % [
+        name.name, name.feature_code, name.zone, name.latitude, name.longitude
+      ]
     end
   end
 end

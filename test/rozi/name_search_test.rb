@@ -34,8 +34,8 @@ module Rozi
         ;Baz
         #1,,
         #2,WGS 84
-        Oslo,Cities,,12.34,56.78
-        Bergen,Cities,,23.45,67.89
+        Oslo,Cities,,12.340000,56.780000
+        Bergen,Cities,,23.450000,67.890000
       NST
 
       nst = NameSearchText.new
@@ -52,8 +52,8 @@ module Rozi
       expected_output = <<-NST.gsub(/ {8}/, "")
         #1,UTM,32V,N
         #2,Norsk
-        Oslo,Cities,,12.34,56.78
-        Bergen,Cities,33,23.45,67.89
+        Oslo,Cities,,12.340000,56.780000
+        Bergen,Cities,33,23.450000,67.890000
       NST
 
       nst = NameSearchText.new
@@ -100,7 +100,7 @@ module Rozi
     def test_name_to_line
       name = Rozi::Name.new "Foo", "Bar", nil, 12.34, 56.78
 
-      expected_output = "Foo,Bar,,12.34,56.78"
+      expected_output = "Foo,Bar,,12.340000,56.780000"
       output = @subject.send :name_to_line, name
 
       assert_equal expected_output, output
