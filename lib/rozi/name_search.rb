@@ -4,20 +4,21 @@ require "rozi/shared"
 
 module Rozi
   ##
-  # Writes a {Rozi::NameSearchText} object to a file.
+  # Writes an enumerable of names to a file
   #
-  # @see Rozi::NameSearchTextWriter#write
+  # All keyword arguments are used as track properties.
   #
-  def write_nst(nst, file)
-    @@nst_writer ||= NameSearchTextWriter.new
+  # @param [Enumerable] waypoints
+  # @param [String] file_path
+  #
+  def write_nst(enumerable, file_path, **properties)
+    NameSearchTextFile.open(file_path, "w") { |nst|
+      nst.write_properties NameSearchProperties.new(**properties)
 
-    if file.is_a? String
-      open_file(file, "w") { |f|
-        @@nst_writer.write(nst, f)
+      enumerable.each { |name|
+        nst.write_name name
       }
-    else
-      @@nst_writer.write(nst, file)
-    end
+    }
 
     return nil
   end
@@ -33,108 +34,141 @@ module Rozi
   end
 
   ##
-  # A name search text (.nst) file is a text file that can be converted into a
-  # name database used by Ozi Explorer's "name search" functionality. This class
-  # represents such a file and can be written to disk using
-  # {Rozi::NameSearchTextWriter}.
+  # Represents the global properties of a name search text file
   #
-  class NameSearchText
-
-    attr_accessor :comment, :datum, :names, :latlng,
-      :utm, :utm_zone, :hemisphere
+  class NameSearchProperties < DataStruct
+    PROPERTIES = [
+      :comment, :datum, :latlng, :utm, :utm_zone, :hemisphere
+    ]
 
     include Shared
 
-    def initialize
-      @comment = ""
-      @datum = "WGS 84"
-      @names = []
+    def initialize(*args, **kwargs)
+      update(
+        comment: "",
+        datum: "WGS 84",
+        latlng: true,
+        utm: false,
+        utm_zone: nil,
+        hemisphere: nil
+      )
 
-      @latlng = true
-      @utm = false
-      @utm_zone = nil
-      @hemisphere = nil
-    end
-
-    def <<(name)
-      @names << name
+      super
     end
 
     def datum=(datum)
       if not datum_valid?(datum)
-        fail ArgumentError, %(Invalid datum: "#{datum}")
+        fail ArgumentError, "Invalid datum: #{datum}"
       end
 
-      @datum = datum
+      super datum
     end
   end
 
   ##
-  # A class for writing {Rozi::NameSearchText} objects to files.
+  # A thin layer above {File} that handles reading and writing of names to name
+  # search text files
   #
-  # @note Text in name search files (names and feature codes) cannot contain
-  #   commas. There is no mechanism for escaping commas or substituting them
-  #   with different symbols like in waypoint files.
-  #
-  class NameSearchTextWriter
-
+  class NameSearchTextFile < FileWrapperBase
     ##
-    # Writes +nst+ to +file+.
+    # Writes an enumerable of {Rozi::Name} objects to the file
     #
-    # @param [Rozi::NameSearchText] nst
-    # @param [File, StringIO] file an open file object
+    # @param [Enumerable] enumerable
+    # @return [nil]
     #
-    def write(nst, file)
-      if nst.comment
-        nst.comment.each_line { |line|
-          file.write ";#{line.chomp}\n"
-        }
-      end
-
-      file.write construct_first_line(nst) << "\n"
-      file.write construct_second_line(nst) << "\n"
-
-      nst.names.each { |name|
-        file.write name_to_line(name) << "\n"
+    def write(enumerable)
+      enumerable.each { |name|
+        write_name name
       }
 
-      return nil
+      nil
+    end
+
+    ##
+    # Writes a {Rozi::Name} to the file
+    #
+    # @note If no properties have been written to the file before this method is
+    #   called, a default set of properties will be automatically written to the
+    #   file first
+    # @param [Rozi::Name] name
+    # @return [nil]
+    #
+    def write_name(name)
+      ensure_properties
+
+      @file.write serialize_name(name)
+      @file.write "\n"
+
+      nil
+    end
+
+    def write_properties(properties)
+      if @file.size > 0
+        raise "Can't write file properties, file is not empty"
+      end
+
+      @file.write serialize_properties(properties)
+      @file.write "\n"
+
+      nil
     end
 
     private
 
-    def construct_first_line(nst)
-      first_line = "#1,"
+    ##
+    # Ensures that properties have been written to the file
+    #
+    def ensure_properties
+      return if @properties_written
 
-      if nst.utm
-        first_line << "UTM,#{nst.utm_zone}"
+      @properties_written = true
 
-        if nst.hemisphere
-          first_line << ",#{nst.hemisphere}"
-        end
-      else
-        first_line << ","
+      if @file.size == 0
+        write_properties NameSearchProperties.new
       end
-
-      return first_line
     end
 
-    def construct_second_line(nst)
-      "#2,#{nst.datum}"
-    end
-
-    def name_to_line(name)
+    def serialize_name(name)
       if not name.name or not name.latitude or not name.longitude
-        fail "name, latitude and longitude must be set!"
+        fail ArgumentError, "name, latitude and longitude must be set!"
       end
 
-      if name.name.include?(",") or name.feature_code.include?(",")
+      feature_code = name.feature_code || ""
+
+      if name.name.include?(",") or feature_code.include?(",")
         fail ArgumentError, "Text cannot contain commas"
       end
 
-      "%s,%s,%s,%.6f,%.6f" % [
-        name.name, name.feature_code, name.zone, name.latitude, name.longitude
+      "%s,%s,%s,%s,%s" % [
+        name.name, name.feature_code, name.zone,
+        name.latitude.round(6), name.longitude.round(6)
       ]
+    end
+
+    def serialize_properties(properties)
+      out = ""
+
+      if properties.comment
+        properties.comment.each_line { |line|
+          out << ";#{line.chomp}\n"
+        }
+      end
+
+      out << "#1,"
+
+      if properties.utm
+        out << "UTM,#{properties.utm_zone}"
+
+        if properties.hemisphere
+          out << ",#{properties.hemisphere}"
+        end
+      else
+        out << ","
+      end
+
+      out << "\n#2,#{properties.datum}"
+
+      return out
     end
   end
 end
