@@ -1,6 +1,5 @@
 
-module Rozi
-
+module RoziTestSuite
   class SharedTest < Minitest::Test
     def setup
       @subject = Class.new {
@@ -29,5 +28,4 @@ module Rozi
       refute @subject.datum_valid?("Rambunctious")
     end
   end
-
 end
