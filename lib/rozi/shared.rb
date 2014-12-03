@@ -1,6 +1,5 @@
 
 module Rozi
-
   ##
   # Contains general functions for working with Ozi Explorer file formats
   #
@@ -43,6 +42,27 @@ module Rozi
     def datum_valid?(datum)
       Rozi::DATUMS.include? datum
     end
-  end
 
+    ##
+    # All data structures with a datum property should include this module
+    #
+    module DatumSetter
+      include Shared
+
+      ##
+      # Sets the datum property
+      #
+      # @param [String] datum
+      # @raise [ArgumentError] on invalid datum
+      # @return [void]
+      #
+      def datum=(datum)
+        if not datum_valid?(datum)
+          fail ArgumentError, "Invalid datum: #{datum}"
+        end
+
+        super datum
+      end
+    end
+  end
 end

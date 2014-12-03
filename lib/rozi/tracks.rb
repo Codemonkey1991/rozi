@@ -58,6 +58,7 @@ module Rozi
     ]
 
     include Shared
+    include Shared::DatumSetter
 
     def initialize(*args, **kwargs)
       update(
@@ -76,18 +77,6 @@ module Rozi
 
     def color=(color)
       super interpret_color(color)
-    end
-
-    ##
-    # @param [String] datum
-    # @raise [ArgumentError] on invalid datum
-    #
-    def datum=(datum)
-      if not Rozi::DATUMS.include?(datum)
-        fail ArgumentError, "Invalid datum: #{datum}"
-      end
-
-      super datum
     end
   end
 

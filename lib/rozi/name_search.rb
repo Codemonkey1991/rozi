@@ -42,6 +42,7 @@ module Rozi
     ]
 
     include Shared
+    include Shared::DatumSetter
 
     def initialize(*args, **kwargs)
       update(
@@ -54,14 +55,6 @@ module Rozi
       )
 
       super
-    end
-
-    def datum=(datum)
-      if not datum_valid?(datum)
-        fail ArgumentError, "Invalid datum: #{datum}"
-      end
-
-      super datum
     end
   end
 

@@ -96,6 +96,8 @@ module Rozi
   # lines of a waypoint file
   #
   class WaypointFileProperties < DataStruct
+    include Shared::DatumSetter
+
     PROPERTIES = [:datum, :version]
 
     def initialize(*args, **kwargs)

@@ -3,7 +3,7 @@ module RoziTestSuite
   class SharedTest < Minitest::Test
     def setup
       @subject = Class.new {
-        include Shared
+        include Rozi::Shared
       }.new
     end
 
@@ -26,6 +26,24 @@ module RoziTestSuite
 
       refute @subject.datum_valid?("Coolywobbles")
       refute @subject.datum_valid?("Rambunctious")
+    end
+
+    class DatumSetterTest < Minitest::Test
+      def setup
+        @subject = DataStruct(:datum) {
+          include Rozi::Shared::DatumSetter
+        }.new
+      end
+
+      def test_setting_invalid_datum
+        assert_raises(ArgumentError) {
+          @subject.datum = "Foo"
+        }
+      end
+
+      def test_setting_datum
+        @subject.datum = "Norsk"
+      end
     end
   end
 end

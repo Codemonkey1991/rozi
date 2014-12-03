@@ -73,11 +73,11 @@ module RoziTestSuite
         @subject.send(:serialize_waypoint_file_properties, m)
       )
 
-      m = Rozi::WaypointFileProperties.new("Norge", "1.2")
+      m = Rozi::WaypointFileProperties.new("Norsk", "1.2")
 
       assert_equal(
         "OziExplorer Waypoint File Version 1.2\n" +
-        "Norge\n" +
+        "Norsk\n" +
         "Reserved 2\n",
         @subject.send(:serialize_waypoint_file_properties, m)
       )
