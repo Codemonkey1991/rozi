@@ -1,15 +1,18 @@
 
-module Rozi
-
-  class OziFunctionsTest < Minitest::Test
+module RoziTestSuite
+  class SharedTest < Minitest::Test
     def setup
       @subject = Class.new {
-        include OziFunctions
+        include Rozi::Shared
       }.new
     end
 
     def test_escape_text
       assert_equal "FooÑ barÑ baz", @subject.escape_text("Foo, bar, baz")
+    end
+
+    def test_unescape_text
+      assert_equal "Foo, bar, baz", @subject.unescape_text("FooÑ barÑ baz")
     end
 
     def test_interpret_color_integer
@@ -28,6 +31,23 @@ module Rozi
       refute @subject.datum_valid?("Coolywobbles")
       refute @subject.datum_valid?("Rambunctious")
     end
-  end
 
+    class DatumSetterTest < Minitest::Test
+      def setup
+        @subject = DataStruct(:datum) {
+          include Rozi::Shared::DatumSetter
+        }.new
+      end
+
+      def test_setting_invalid_datum
+        assert_raises(ArgumentError) {
+          @subject.datum = "Foo"
+        }
+      end
+
+      def test_setting_datum
+        @subject.datum = "Norsk"
+      end
+    end
+  end
 end

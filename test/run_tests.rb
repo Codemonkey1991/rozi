@@ -1,9 +1,24 @@
 
-require "minitest/autorun"
-require "mocha/setup"
+require_relative "rozi_test_suite.rb"
 
-require "rozi"
+if ARGV.index("--").nil?
+  test_files = []
+else
+  files_index = ARGV.index("--") + 1
+  test_files = ARGV[files_index..-1]
 
-ARGV.each { |file|
-  load(file)
+  # Everything after and including the -- is removed from ARGV, as to not
+  # confuse Minitest.
+  ARGV.slice!(files_index - 1, ARGV.length)
+end
+
+files = RoziTestSuite.require_patterns test_files
+
+puts "Included files:"
+puts
+
+files.each { |file|
+  puts file
 }
+
+puts

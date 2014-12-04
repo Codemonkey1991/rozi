@@ -1,13 +1,16 @@
 
-module Rozi
+require "datastruct"
 
-  PROJECT_DIR = File.expand_path("../", File.dirname(__FILE__))
+module Rozi
+  extend self
+
+  ROOT = File.expand_path("../", File.dirname(__FILE__))
 
   ##
   # Loads all ruby files under lib/rozi. Called automatically when requiring
   # "rozi.rb".
   #
-  def self.require_lib!
+  def require_lib
     this_dir = File.absolute_path(File.dirname(__FILE__))
     source_files = Dir[File.join(this_dir, "rozi/**/*.rb")]
 
@@ -17,4 +20,4 @@ module Rozi
   end
 end
 
-Rozi.require_lib!()
+Rozi.require_lib
