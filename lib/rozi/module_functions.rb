@@ -19,10 +19,15 @@ module Rozi
   #
   def open_file(path, mode="r")
     file = File.open(path, mode)
-    file.set_encoding(
-      "ISO-8859-1", "UTF-8",
-      crlf_newline: true, undef: :replace, replace: "?"
-    )
+    opts = {undef: :replace, replace: "?"}
+
+    if mode.include? "w"
+      opts[:crlf_newline] = true
+    else
+      opts[:universal_newline] = true
+    end
+
+    file.set_encoding("ISO-8859-1", "UTF-8", opts)
 
     if block_given?
       yield file

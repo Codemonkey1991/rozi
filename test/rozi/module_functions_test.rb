@@ -12,6 +12,10 @@ module RoziTestSuite
         text = File.read(file_path, mode: "rb").force_encoding("ISO-8859-1")
 
         assert_equal "foo\r\nbar\r\næøå".encode("ISO-8859-1"), text
+
+        file = Rozi.open_file(file_path, "r")
+        assert_equal "foo\nbar\næøå", file.read
+        file.close
       }
     end
 
