@@ -68,6 +68,19 @@ module Rozi
       super
     end
 
+    ##
+    # Returns the value of the display format property
+    #
+    # @param [Boolean] raw If true, returns the raw value with no processing
+    #
+    def display_format(raw: false)
+      if raw
+        super
+      else
+        DISPLAY_FORMATS.invert[super]
+      end
+    end
+
     def display_format=(display_format)
       if display_format.is_a? Symbol
         @data[:display_format] = DISPLAY_FORMATS[display_format]

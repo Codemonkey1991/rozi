@@ -33,6 +33,10 @@ module RoziTestSuite
   end
 
   class WaypointTest < TestCase
+    def setup
+      @subject = Rozi::Waypoint.new
+    end
+
     def test_initialize
       wp = Rozi::Waypoint.new(number: 5, name: "Test point")
 
@@ -43,6 +47,21 @@ module RoziTestSuite
         # Invalid attribute "foo".
         wp = Rozi::Waypoint.new(foo: 123)
       }
+    end
+
+    def test_display_format_setter
+      @subject.display_format = 3
+      assert_equal 3, @subject.display_format(raw: true)
+
+      @subject.display_format = :name_with_dot
+      assert_equal 3, @subject.display_format(raw: true)
+    end
+
+    def test_display_format_getter
+      @subject.display_format = 3
+
+      assert_equal :name_with_dot, @subject.display_format
+      assert_equal 3, @subject.display_format(raw: true)
     end
 
     def test_colors
