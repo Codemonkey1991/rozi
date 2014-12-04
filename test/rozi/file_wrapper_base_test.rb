@@ -1,8 +1,8 @@
 
-module Rozi
+module RoziTestSuite
   class FileWrapperBaseTest < Minitest::Test
     def setup
-      @subject = Class.new(FileWrapperBase)
+      @subject = Class.new(Rozi::FileWrapperBase)
     end
 
     def test_open
