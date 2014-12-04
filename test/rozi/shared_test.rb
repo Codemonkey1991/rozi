@@ -11,6 +11,10 @@ module RoziTestSuite
       assert_equal "FooÑ barÑ baz", @subject.escape_text("Foo, bar, baz")
     end
 
+    def test_unescape_text
+      assert_equal "Foo, bar, baz", @subject.unescape_text("FooÑ barÑ baz")
+    end
+
     def test_interpret_color_integer
       assert_equal 255, @subject.interpret_color(255)
     end

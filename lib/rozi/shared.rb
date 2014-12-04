@@ -11,7 +11,14 @@ module Rozi
     # @return [String]
     #
     def escape_text(text)
-      text.gsub(/,/, 209.chr.encode("UTF-8", "ISO-8859-1"))
+      text.gsub(/,/, "Ñ")
+    end
+
+    ##
+    # Undoes the effect of {Rozi::Shared#escape_text}
+    #
+    def unescape_text(text)
+      text.gsub(/Ñ/, ",")
     end
 
     ##
