@@ -63,6 +63,68 @@ module RoziTestSuite
       @subject = Rozi::WaypointFile.new(@sio)
     end
 
+    def test_write
+      @subject.expects(:write_waypoint).with(:foo)
+      @subject.expects(:write_waypoint).with(:bar)
+      @subject.expects(:write_waypoint).with(:baz)
+
+      @subject.write([:foo, :bar, :baz])
+    end
+
+    def test_write_waypoint
+      wpt = Rozi::Waypoint.new
+
+      @subject.expects(:write_properties).once
+
+      @subject.write_waypoint(wpt)
+      @subject.write_waypoint(wpt)
+    end
+
+    def test_each_waypoint
+      @subject.expects(:read_waypoint).times(4)
+        .returns(:foo)
+        .then.returns(:bar)
+        .then.returns(:baz)
+        .then.raises(EOFError)
+
+      assert_equal [:foo, :bar, :baz], @subject.each_waypoint.to_a
+    end
+
+    def test_read_properties
+      @sio.write("OziExplorer Waypoint File Version 1.0\n")
+      @sio.write("Norsk\n")
+      @sio.write("Reserved 2\n")
+      @sio.write("garmin\n")
+      @sio.rewind
+
+      properties = @subject.read_properties
+      assert_equal "1.0", properties.version
+      assert_equal "Norsk", properties.datum
+    end
+
+    def test_read_properties_with_bad_file_pos
+      @sio.write("foo")
+
+      assert_raises(RuntimeError) {
+        @subject.read_properties
+      }
+    end
+
+    def test_read_waypoint
+      @sio.write("foo\n")
+      @sio.write("bar\n")
+      @sio.rewind
+
+      @subject.expects(:read_properties).once
+
+      def @subject.parse_waypoint(x)
+        return "parsed: #{x.strip}"
+      end
+
+      assert_equal "parsed: foo", @subject.read_waypoint
+      assert_equal "parsed: bar", @subject.read_waypoint
+    end
+
     def test_parse_waypoint_file_properties
       expected_output = {
         version: "1.0",

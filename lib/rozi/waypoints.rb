@@ -117,6 +117,8 @@ module Rozi
   class WaypointFile < FileWrapperBase
     include Shared
 
+    #@group Writing methods
+
     ##
     # Writes waypoints to the file
     #
@@ -158,11 +160,62 @@ module Rozi
     # @return [nil]
     #
     def write_waypoint(waypoint)
+      ensure_file_properties
+
       @file.write serialize_waypoint(waypoint)
       @file.write "\n"
 
       nil
     end
+
+    #@group Reading methods
+
+    ##
+    # Reads and yields all waypoints
+    #
+    def each_waypoint
+      return to_enum(:each_waypoint) unless block_given?
+
+      @file.rewind
+
+      loop { yield read_waypoint }
+    rescue EOFError
+      return nil
+    end
+
+    ##
+    # Reads the waypoint file properties
+    #
+    # @raise [RuntimeError] If the file position isn't 0
+    # @return [WaypointFileProperties]
+    #
+    def read_properties
+      if @file.pos != 0
+        raise "File position must be 0 to read properties"
+      end
+
+      text = ""
+
+      4.times { text << @file.readline }
+
+      parse_waypoint_file_properties text
+    end
+
+    ##
+    # Reads the next waypoint
+    #
+    # @raise [EOFError] When EOF is reached
+    # @return [Waypoint]
+    #
+    def read_waypoint
+      if @file.pos == 0
+        read_properties
+      end
+
+      parse_waypoint @file.readline
+    end
+
+    #@endgroup
 
     private
 
