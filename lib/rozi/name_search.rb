@@ -95,6 +95,15 @@ module Rozi
       nil
     end
 
+    ##
+    # Writes name search properties to the file
+    #
+    # The file must be empty when this method is called!
+    #
+    # @raise [RuntimeError] if the file isn't empty
+    # @param [NameSearchProperties] properties
+    # @return [nil]
+    #
     def write_properties(properties)
       if @file.size > 0
         raise "Can't write file properties, file is not empty"

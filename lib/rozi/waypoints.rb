@@ -134,21 +134,18 @@ module Rozi
     ##
     # Writes waypoint file properties to the file
     #
-    # This function can only be used on an *empty* file. If any waypoints are
-    # written to the file before file properties is written, a
-    # {WaypointFileProperties} object will be created with default values and
-    # written to the file first. Executing this function on a non-empty file
-    # will result in a runtime error.
+    # The file must be empty when this method is called!
     #
-    # @param [WaypointFileProperties] file properties
+    # @raise [RuntimeError] if the file isn't empty
+    # @param [WaypointFileProperties] properties
     # @return [nil]
     #
-    def write_properties(props)
+    def write_properties(properties)
       if @file.size > 0
         raise "Can't write file properties, file is not empty"
       end
 
-      @file.write serialize_waypoint_file_properties(props)
+      @file.write serialize_waypoint_file_properties(properties)
       @file.write "\n"
 
       nil

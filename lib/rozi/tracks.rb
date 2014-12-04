@@ -89,17 +89,18 @@ module Rozi
     ##
     # Writes track properties to the file
     #
-    # @warn The file *must be empty* when this method is called
+    # The file must be empty when this method is called!
     #
-    # @param [TrackProperties] track_properties
+    # @raise [RuntimeError] if the file isn't empty
+    # @param [TrackProperties] properties
     # @return [nil]
     #
-    def write_track_properties(track_properties)
+    def write_track_properties(properties)
       if @file.size > 0
         raise "Can't write file properties, file is not empty"
       end
 
-      @file.write serialize_track_properties(track_properties)
+      @file.write serialize_track_properties(properties)
 
       nil
     end
