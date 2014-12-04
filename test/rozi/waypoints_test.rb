@@ -63,6 +63,84 @@ module RoziTestSuite
       @subject = Rozi::WaypointFile.new(@sio)
     end
 
+    def test_parse_waypoint_file_properties
+      expected_output = {
+        version: "1.0",
+        datum: "Norsk"
+      }
+
+      text = (
+        "OziExplorer Waypoint File Version 1.0\n" +
+        "Norsk\n" +
+        "Reserved 2\n" +
+        "garmin\n"
+      )
+
+      properties = @subject.send(:parse_waypoint_file_properties, text)
+
+      assert_equal expected_output, properties.to_h
+    end
+
+    def test_parse_waypoint
+      expected_output = {
+        number: 1,
+        name: "Grorud",
+        latitude: 59.960742,
+        longitude: 10.881999,
+        date: 41977.3865272,
+        symbol: 0,
+        display_format: 1,
+        fg_color: 0,
+        bg_color: 15441496,
+        description: "Description, with comma",
+        pointer_direction: 0,
+        altitude: 404,
+        font_size: 6,
+        font_style: 0,
+        symbol_size: 15
+      }
+
+      text = (
+        "1,Grorud,  59.960742,  10.881999,41977.3865272,  0, 0, 1,         0," +
+        "  15441496,DescriptionÑ with comma, 0, 0,    0,    404, 6, 0,15,0,10" +
+        ".0,2,,,,60\n"
+      )
+
+      waypoint = @subject.send(:parse_waypoint, text)
+
+      assert_equal expected_output, waypoint.to_h
+    end
+
+    def test_parse_waypoint_2
+      expected_output = {
+        number: 2,
+        name: "Lillestrøm",
+        latitude: 59.956788,
+        longitude: 11.051257,
+        date: 41977.3935379,
+        symbol: 7,
+        display_format: 4,
+        fg_color: 16777215,
+        bg_color: 5450740,
+        description: "Description, with comma",
+        pointer_direction: 0,
+        altitude: -777,
+        font_size: 6,
+        font_style: 0,
+        symbol_size: 20
+      }
+
+      text = (
+        "2,Lillestrøm,  59.956788,  11.051257,41977.3935379,  7, 0, 4,  16777" +
+        "215,   5450740,DescriptionÑ with comma, 0, 0,    0,   -777, 6, 0,20," +
+        "0,10.0,2,,,,60"
+      )
+
+      waypoint = @subject.send(:parse_waypoint, text)
+
+      assert_equal expected_output, waypoint.to_h
+    end
+
     def test_serialize_waypoint_file_properties
       m = Rozi::WaypointFileProperties.new
 

@@ -166,12 +166,54 @@ module Rozi
 
     private
 
-    def serialize_waypoint_file_properties(properties)
-      <<-TEXT.gsub(/^[ ]{8}/, "")
-        OziExplorer Waypoint File Version #{properties.version}
-        #{properties.datum}
-        Reserved 2
-      TEXT
+    def parse_waypoint(text)
+      map = {
+        0  => {symbol: :number,            cast: method(:Integer)},
+        1  => {symbol: :name,              cast: method(:String)},
+        2  => {symbol: :latitude,          cast: method(:Float)},
+        3  => {symbol: :longitude,         cast: method(:Float)},
+        4  => {symbol: :date,              cast: method(:Float)},
+        5  => {symbol: :symbol,            cast: method(:Integer)},
+        7  => {symbol: :display_format,    cast: method(:Integer)},
+        8  => {symbol: :fg_color,          cast: method(:Integer)},
+        9  => {symbol: :bg_color,          cast: method(:Integer)},
+        10 => {symbol: :description,       cast: method(:String)},
+        11 => {symbol: :pointer_direction, cast: method(:Integer)},
+        14 => {symbol: :altitude,          cast: method(:Integer)},
+        15 => {symbol: :font_size,         cast: method(:Integer)},
+        16 => {symbol: :font_style,        cast: method(:Integer)},
+        17 => {symbol: :symbol_size,       cast: method(:Integer)},
+      }
+
+      text = text.strip
+      fields = text.split(",").map { |x| x.strip }
+
+      waypoint = Waypoint.new
+
+      map.each_pair { |index, data|
+        value = fields[index]
+
+        next if value.empty?
+
+        value = data[:cast].call(value)
+
+        if value.is_a? String
+          value = unescape_text(value)
+        end
+
+        waypoint.set(data[:symbol], value)
+      }
+
+      waypoint
+    end
+
+    def parse_waypoint_file_properties(text)
+      lines = text.lines
+
+      version = lines[0].strip[-3..-1]
+      datum = lines[1].strip
+
+      WaypointFileProperties.new(datum, version)
     end
 
     def serialize_waypoint(waypoint)
@@ -181,6 +223,14 @@ module Rozi
       array.map! { |item| item.is_a?(Float) ? item.round(6) : item }
 
       "%d,%s,%f,%f,%s,%d,1,%d,%d,%d,%s,%d,,,%d,%d,%d,%d" % array
+    end
+
+    def serialize_waypoint_file_properties(properties)
+      <<-TEXT.gsub(/^[ ]{8}/, "")
+        OziExplorer Waypoint File Version #{properties.version}
+        #{properties.datum}
+        Reserved 2
+      TEXT
     end
 
     ##
