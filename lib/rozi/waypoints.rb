@@ -124,7 +124,7 @@ module Rozi
   end
 
   ##
-  # A thin layer above {File} that handles reading and writing of waypoints to
+  # A thin layer above +File+ that handles reading and writing of waypoints to
   # files
   #
   class WaypointFile < FileWrapperBase

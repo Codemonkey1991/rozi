@@ -7,7 +7,7 @@ module Rozi
     attr_accessor :file
 
     ##
-    # Behaves like {File#open}, but returns/yields a {WaypointFile} object
+    # Behaves like +File#open+, but returns/yields a {WaypointFile} object
     #
     def self.open(file_path, mode="r")
       file = Rozi.open_file(file_path, mode)

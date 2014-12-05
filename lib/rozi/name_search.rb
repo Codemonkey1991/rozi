@@ -8,7 +8,7 @@ module Rozi
   #
   # All keyword arguments are used as track properties.
   #
-  # @param [Enumerable] waypoints
+  # @param [Enumerable] enumerable
   # @param [String] file_path
   #
   def write_nst(enumerable, file_path, **properties)
@@ -59,7 +59,7 @@ module Rozi
   end
 
   ##
-  # A thin layer above {File} that handles reading and writing of names to name
+  # A thin layer above +File+ that handles reading and writing of names to name
   # search text files
   #
   class NameSearchTextFile < FileWrapperBase
