@@ -41,5 +41,12 @@ module Rozi
     def closed?
       @file.closed?
     end
+
+    ##
+    # @return [nil]
+    #
+    def rewind
+      @file.rewind
+    end
   end
 end
