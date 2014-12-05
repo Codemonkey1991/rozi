@@ -22,4 +22,5 @@ Gem::Specification.new { |s|
   s.add_development_dependency "mocha"
   s.add_development_dependency "byebug"
   s.add_development_dependency "yard"
+  s.add_development_dependency "redcarpet", "~> 3"   # Git flavored markdown
 }
