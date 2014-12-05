@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    rozi (0.1.0)
+    rozi (0.1.1)
       datastruct (~> 0)
 
 GEM
