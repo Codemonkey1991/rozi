@@ -5,6 +5,10 @@ module Rozi
   ##
   # Opens a file with the correct settings for usage with Ozi Explorer
   #
+  # The file instance has UTF-8 internal encoding and ISO-8859-1 external
+  # encoding. When writing, all line endings are converted to CRLF. When
+  # reading, all line endings are converted to LF.
+  #
   # @overload open_file(path, mode="r")
   #
   #   @param [String] path
